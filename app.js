@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+
 require("dotenv").config();
 
 const app = express();
@@ -9,16 +11,16 @@ const errorHandler = require("./middleware/errorHandler");
 const contentType = require("./middleware/contentType");
 const taskRoutes = require("./routes/taskRoutes");
 
-// Parse JSON
+// MIDDLEWARE
+app.use(cors());
+
 app.use(express.json());
 
-// Logging Middleware
 app.use(logger);
 
-// Content-Type Middleware
 app.use(contentType);
 
-// MongoDB Connection
+// MONGODB CONNECTION
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
@@ -28,20 +30,20 @@ mongoose
         console.error("MongoDB connection failed:", error);
     });
 
-// Task Routes
+// ROUTES
 app.use("/tasks", taskRoutes);
 
-// Custom 404 Handler
+// 404 HANDLER
 app.use((req, res) => {
     res.status(404).json({
         message: "Route not found"
     });
 });
-
-// Global Error Handler - LAST
+// GLOBAL ERROR HANDLER
 app.use(errorHandler);
 
-const PORT = 3000;
+// START SERVER
+const PORT = 5000;
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
