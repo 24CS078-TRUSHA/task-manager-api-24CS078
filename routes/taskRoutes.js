@@ -2,73 +2,101 @@ const express = require("express");
 
 const router = express.Router();
 
-let tasks = [
-    {
-        id: 1,
-        title: "Learn Node.js",
-        completed: false
-    }
-];
+const Task = require("../models/Task");
 
 // GET /tasks
-router.get("/", (req, res) => {
-    res.status(200).json(tasks);
+router.get("/", async (req, res, next) => {
+    try {
+        const tasks = await Task.find();
+
+        res.status(200).json(tasks);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// GET /tasks/:id
+router.get("/:id", async (req, res, next) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
+
+        res.status(200).json(task);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // POST /tasks
-router.post("/", (req, res) => {
-    const newTask = {
-        id: tasks.length + 1,
-        title: req.body.title,
-        completed: req.body.completed || false
-    };
+router.post("/", async (req, res, next) => {
+    try {
+        const task = new Task({
+            title: req.body.title,
+            description: req.body.description,
+            completed: req.body.completed,
+            priority: req.body.priority
+        });
 
-    tasks.push(newTask);
+        const savedTask = await task.save();
 
-    res.status(201).json({
-        message: "Task created successfully",
-        task: newTask
-    });
+        res.status(201).json({
+            message: "Task created successfully",
+            task: savedTask
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // PUT /tasks/:id
-router.put("/:id", (req, res) => {
-    const id = parseInt(req.params.id);
+router.put("/:id", async (req, res, next) => {
+    try {
+        const task = await Task.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
 
-    const task = tasks.find(t => t.id === id);
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
 
-    if (!task) {
-        return res.status(404).json({
-            message: "Task not found"
+        res.status(200).json({
+            message: "Task updated successfully",
+            task: task
         });
+    } catch (error) {
+        next(error);
     }
-
-    task.title = req.body.title;
-    task.completed = req.body.completed;
-
-    res.status(200).json({
-        message: "Task updated successfully",
-        task: task
-    });
 });
 
 // DELETE /tasks/:id
-router.delete("/:id", (req, res) => {
-    const id = parseInt(req.params.id);
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const task = await Task.findByIdAndDelete(req.params.id);
 
-    const index = tasks.findIndex(t => t.id === id);
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
 
-    if (index === -1) {
-        return res.status(404).json({
-            message: "Task not found"
+        res.status(200).json({
+            message: "Task deleted successfully"
         });
+    } catch (error) {
+        next(error);
     }
-
-    tasks.splice(index, 1);
-
-    res.status(200).json({
-        message: "Task deleted successfully"
-    });
 });
 
 module.exports = router;

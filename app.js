@@ -1,4 +1,6 @@
 const express = require("express");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
 
@@ -15,6 +17,16 @@ app.use(logger);
 
 // Content-Type Middleware
 app.use(contentType);
+
+// MongoDB Connection
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("MongoDB connected successfully");
+    })
+    .catch((error) => {
+        console.error("MongoDB connection failed:", error);
+    });
 
 // Task Routes
 app.use("/tasks", taskRoutes);
