@@ -9,8 +9,23 @@ The backend is built using:
 - MongoDB
 - Mongoose
 - CORS
+- bcryptjs
+- jsonwebtoken
 
 The API provides CRUD operations for managing tasks.
+
+## Authentication
+
+Set `MONGO_URI` and `JWT_SECRET` in `.env`. Use a long, randomly generated JWT
+secret and keep `.env` out of source control.
+
+- `POST /auth/register` accepts `{ "email": "name@example.com", "password": "at-least-8-characters" }`.
+- `POST /auth/login` accepts the same fields and returns a JWT that expires after one hour.
+- `GET /auth/me` returns the authenticated user's public details.
+- Include the login token in the Authorization header using the Bearer scheme for every request to `/tasks`.
+
+Task creation and updates validate and sanitize the allowed task fields before
+the database is accessed. New tasks require a non-empty `title`.
 
 ---
 
@@ -33,13 +48,17 @@ task-manager-api
 ├── middleware
 │   ├── logger.js
 │   ├── errorHandler.js
-│   └── contentType.js
+│   ├── contentType.js
+│   ├── auth.js
+│   └── requestValidation.js
 │
 ├── models
-│   └── Task.js
+│   ├── Task.js
+│   └── User.js
 │
 ├── routes
-│   └── taskRoutes.js
+│   ├── taskRoutes.js
+│   └── authRoutes.js
 │
 ├── .env
 ├── .env.example

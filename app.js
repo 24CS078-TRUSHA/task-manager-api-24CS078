@@ -10,6 +10,7 @@ const logger = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const contentType = require("./middleware/contentType");
 const taskRoutes = require("./routes/taskRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 // MIDDLEWARE
 app.use(cors());
@@ -31,6 +32,7 @@ mongoose
     });
 
 // ROUTES
+app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
 
 // 404 HANDLER

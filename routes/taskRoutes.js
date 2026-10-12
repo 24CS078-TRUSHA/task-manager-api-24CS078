@@ -3,6 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 const Task = require("../models/Task");
+const authenticateToken = require("../middleware/auth");
+const { validateTask } = require("../middleware/requestValidation");
+
+router.use(authenticateToken);
 
 // GET /tasks
 router.get("/", async (req, res, next) => {
@@ -33,7 +37,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // POST /tasks
-router.post("/", async (req, res, next) => {
+router.post("/", validateTask, async (req, res, next) => {
     try {
         const task = new Task({
             title: req.body.title,
@@ -54,7 +58,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /tasks/:id
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", validateTask, async (req, res, next) => {
     try {
         const task = await Task.findByIdAndUpdate(
             req.params.id,

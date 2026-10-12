@@ -22,6 +22,18 @@ function errorHandler(err, req, res, next) {
         });
     }
 
+    if (err.code === 11000) {
+        return res.status(409).json({
+            message: "An account with this email already exists"
+        });
+    }
+
+    if (err.type === "entity.parse.failed") {
+        return res.status(400).json({
+            message: "Request body contains invalid JSON"
+        });
+    }
+
     // Other errors
     return res.status(500).json({
         message: "Internal Server Error"
