@@ -48,17 +48,13 @@ task-manager-api
 ├── middleware
 │   ├── logger.js
 │   ├── errorHandler.js
-│   ├── contentType.js
-│   ├── auth.js
-│   └── requestValidation.js
+│   └── contentType.js
 │
 ├── models
-│   ├── Task.js
-│   └── User.js
+│   └── Task.js
 │
 ├── routes
-│   ├── taskRoutes.js
-│   └── authRoutes.js
+│   └── taskRoutes.js
 │
 ├── .env
 ├── .env.example
