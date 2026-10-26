@@ -22,16 +22,6 @@ app.use(logger);
 
 app.use(contentType);
 
-// MONGODB CONNECTION
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("MongoDB connected successfully");
-    })
-    .catch((error) => {
-        console.error("MongoDB connection failed:", error);
-    });
-
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
@@ -45,9 +35,23 @@ app.use((req, res) => {
 // GLOBAL ERROR HANDLER
 app.use(errorHandler);
 
-// START SERVER
-const PORT = 5000;
+module.exports = app;
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    // MONGODB CONNECTION
+    mongoose
+        .connect(process.env.MONGO_URI)
+        .then(() => {
+            console.log("MongoDB connected successfully");
+        })
+        .catch((error) => {
+            console.error("MongoDB connection failed:", error);
+        });
+
+    // START SERVER
+    const PORT = 5000;
+
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+    });
+}

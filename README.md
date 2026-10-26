@@ -1,5 +1,7 @@
 # Task Manager API
 
+[![CI Pipeline](https://github.com/24CS078-TRUSHA/task-manager-api-24CS078/actions/workflows/ci.yml/badge.svg)](https://github.com/24CS078-TRUSHA/task-manager-api-24CS078/actions/workflows/ci.yml)
+
 This is the backend for Full Stack Task Management Application.
 
 The backend is built using:
@@ -119,3 +121,26 @@ from image build contexts.
 - Mongoose
 - dotenv
 - CORS
+
+## Continuous integration
+
+GitHub Actions runs `npm install` and `npm test` on pushes and pull requests
+targeting `main`. Tests use Supertest to exercise the API without requiring a
+MongoDB server; the task query is mocked in the test.
+
+Run the tests locally with:
+
+```powershell
+npm test
+```
+
+To demonstrate both pipeline outcomes for the practical:
+
+1. Push the working workflow and tests to `main`, then capture the green run in
+   the repository's **Actions** tab.
+2. Temporarily change the expected status in `tests/api.test.js` from `200` to
+   `201`, commit and push that deliberate test failure to `main`, and capture
+   the red run. Do not leave this broken expectation in the final code.
+3. Restore the expected status to `200`, commit and push the fix, then capture
+   the passing run. Keep the failed and passing screenshots in your lab
+   submission; add them to the repository only if your instructor requires it.
