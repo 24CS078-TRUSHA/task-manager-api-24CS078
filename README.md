@@ -48,16 +48,27 @@ To compare response times in Postman or Thunder Client:
 4. Restore caching afterward. Successful POST, PUT, or DELETE requests clear
    the cached list.
 
-Record measurements from your own environment; response times depend on the
-database, server, and network:
+## Asynchronous task-created notifications
 
-| Run | Uncached response time | Cached response time |
-| --- | --- | --- |
-| 1 | ____ ms | ____ ms |
-| 2 | ____ ms | ____ ms |
-| 3 | ____ ms | ____ ms |
+After a task is saved, `POST /tasks` responds with HTTP 201 and emits a
+`task-created` event. The event listener schedules its notification log
+asynchronously, so notification work does not delay the response. The log
+includes the task title, event timestamp, authenticated user's ID, and listener
+completion timestamp. A 150 ms timer makes the ordering visible in the server
+console; it is only for this demonstration.
 
----
+To demonstrate it:
+
+1. Start the backend with `node app.js` and sign in to obtain a JWT.
+2. In Postman or Thunder Client, send an authorized `POST http://localhost:5000/tasks`
+   request with a valid task body, for example
+   `{ "title": "Notification demo", "description": "Test the event listener" }`.
+3. Confirm the response is HTTP 201 and note its response time.
+4. Check the backend terminal. The `[API]` response timestamp should appear
+   before the delayed `[Notification]` line, which includes the task title,
+   timestamp, assigned user ID, and listener completion time.
+5. Capture the response and console output as evidence. Keep the JWT and
+   credentials out of screenshots.
 
 ## Technologies Used
 

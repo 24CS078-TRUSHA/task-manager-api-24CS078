@@ -11,6 +11,7 @@ const errorHandler = require("./middleware/errorHandler");
 const contentType = require("./middleware/contentType");
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
+require("./listeners");
 
 // MIDDLEWARE
 app.use(cors());
