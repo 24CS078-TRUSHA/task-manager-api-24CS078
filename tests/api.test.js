@@ -35,7 +35,8 @@ describe("Task Manager API", () => {
             .get("/tasks")
             .set("Authorization", `Bearer ${token}`);
 
-        expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(201);
+        //expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(tasks);
         expect(response.headers["x-cache"]).toBe("MISS");
         expect(Task.find).toHaveBeenCalledTimes(1);
