@@ -11,6 +11,7 @@ const errorHandler = require("./middleware/errorHandler");
 const contentType = require("./middleware/contentType");
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 require("./listeners");
 
 // MIDDLEWARE
@@ -25,6 +26,7 @@ app.use(contentType);
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
+app.use("/api/ai", aiRoutes);
 
 // 404 HANDLER
 app.use((req, res) => {

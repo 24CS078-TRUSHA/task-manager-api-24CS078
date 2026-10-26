@@ -29,6 +29,29 @@ secret and keep `.env` out of source control.
 Task creation and updates validate and sanitize the allowed task fields before
 the database is accessed. New tasks require a non-empty `title`.
 
+## AI task descriptions
+
+The authenticated endpoint `POST /api/ai/generate-description` accepts a task
+title and returns a concise AI-generated description using Gemini. The React
+task form lets the user edit the suggestion before saving. Gemini requests are
+made only by the backend; the API key is never sent to the browser.
+
+Set `GEMINI_API_KEY` in the backend `.env` file (see `.env.example`). Create a
+Gemini API key in Google AI Studio. The default model is `gemini-3.8-flash`;
+set `GEMINI_MODEL` if you need to select another model available to your key.
+The key is optional for running the rest of the application. If it is missing
+or the provider request fails or times out, the endpoint responds with a clear
+error and the frontend leaves the task form available for manual entry. The UI
+displays a reminder to review AI-generated content.
+
+To try it, sign in and click **Generate description** in the task form. For an
+API test, send an authorized JSON request to
+`POST http://localhost:5000/api/ai/generate-description` with
+`{ "title": "Prepare a project status report" }`. Do not paste the API key into
+frontend code or include it in screenshots. When running with Docker Compose,
+restart the backend container after changing `.env` so it receives the new
+environment value.
+
 ## Task list caching
 
 `GET /tasks` caches the task list in memory for up to 60 seconds. The response
