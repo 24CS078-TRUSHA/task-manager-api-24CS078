@@ -70,6 +70,46 @@ To demonstrate it:
 5. Capture the response and console output as evidence. Keep the JWT and
    credentials out of screenshots.
 
+## Run the full application with Docker Compose
+
+Docker Compose starts MongoDB, the Express API, and the React frontend. Run
+these commands from the backend project folder. The frontend source folder
+(`task-manager-api-frontend`) must be next to this folder because Compose uses
+it as the frontend build context.
+
+1. Install and start Docker Desktop, then check the CLI:
+
+   ```powershell
+   docker --version
+   docker compose version
+   ```
+
+2. Ensure the backend `.env` file contains a `JWT_SECRET`. Compose supplies the
+   MongoDB service URL automatically, so the local `MONGO_URI` value is
+   overridden inside the backend container. Keep `.env` private.
+3. Build and start all services:
+
+   ```powershell
+   docker compose up --build
+   ```
+
+4. Open `http://localhost:5173` for the frontend. The frontend proxies API
+   requests to the backend, and the backend connects to MongoDB using the
+   internal service name `mongodb`.
+5. In another terminal, verify the containers are running:
+
+   ```powershell
+   docker compose ps
+   ```
+
+6. Stop the services with `Ctrl+C`, then run `docker compose down`. MongoDB
+   data remains in the named `mongodb-data` volume between restarts.
+
+The backend is also mapped to `http://localhost:5000` and MongoDB to
+`localhost:27017` for local API tools and database clients. Both projects have
+a `.dockerignore` file so local dependencies and `.env` files are excluded
+from image build contexts.
+
 ## Technologies Used
 
 - Node.js v18+
